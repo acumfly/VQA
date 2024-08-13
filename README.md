@@ -21,6 +21,7 @@
 ![image](https://github.com/user-attachments/assets/d30cf579-c115-44f6-8ebf-43ed5c961a35)
 
 Далее открывается главное окно приложения с выбранным изображением и текстовое поле “Enter your question” для ввода вопроса к снимку.
+
 ![image](https://github.com/user-attachments/assets/52c2a7ff-98ed-4484-973b-92ef3ab2ab9e)
 
 При нажатии на “Submit” программа загружает предсказание модели и выводит его на экран:
