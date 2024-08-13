@@ -17,7 +17,6 @@
 
 Пользователи могут загружать изображения через диалог выбора файла и задавать вопросы о них. Приложение обрабатывает тип вопроса и определяет, какую из моделей необходимо запустить. Для каждого типа вопроса предусмотрена отдельная логика обработки и предсказания.
 
-<div align="center">
-  <video width="630" height="300" src="https://github.com/user-attachments/assets/a7b3d946-d817-429f-bf04-fbeeb8f6dcd8" autoplay muted controls></video>
-</div>
+
+![example_usage_gif](https://github.com/user-attachments/assets/4430a282-836a-4a2e-88a5-db0b9be68e98)
 
