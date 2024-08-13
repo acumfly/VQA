@@ -1,2 +1,7 @@
 models/
 tmp_files/
+.idea/
+.venv/
+GUI/__pycache__/
+build/
+dist/
