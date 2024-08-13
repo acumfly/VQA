@@ -16,17 +16,7 @@
 ## Демонстрация приложения
 
 Пользователи могут загружать изображения через диалог выбора файла и задавать вопросы о них. Приложение обрабатывает тип вопроса и определяет, какую из моделей необходимо запустить. Для каждого типа вопроса предусмотрена отдельная логика обработки и предсказания.
-![example_usage_gif](https://github.com/user-attachments/assets/87577464-b937-4158-9f01-55e59fd0b2d8)
 
-
-При запуске приложения сначала открывается окно выбора изображения из директории:
-![image](https://github.com/user-attachments/assets/d30cf579-c115-44f6-8ebf-43ed5c961a35)
-
-Далее открывается главное окно приложения с выбранным изображением и текстовое поле “Enter your question” для ввода вопроса к снимку.
-
-![image](https://github.com/user-attachments/assets/52c2a7ff-98ed-4484-973b-92ef3ab2ab9e)
-
-При нажатии на “Submit” программа загружает предсказание модели и выводит его на экран:
-![image](https://github.com/user-attachments/assets/97b9865d-341b-45d8-bdf4-ccb377af9c90)
-
-Кнопка “Choose another file” позволяет загрузить другой файл из директории.
+<div align="center">
+  <video width="630" height="300" src="https://github.com/user-attachments/assets/a7b3d946-d817-429f-bf04-fbeeb8f6dcd8" controls></video>
+</div>
