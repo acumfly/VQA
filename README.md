@@ -31,7 +31,7 @@
 
 ![image](https://github.com/user-attachments/assets/e288176e-d503-4c9b-8a46-e9c1d903ace1)
 
-*Accuracy* на тестовой выборке = 0.86
+*Accuracy* на тестовой выборке = 0.84
 
 
 ### Модель многоклассовой классификации
