@@ -28,8 +28,7 @@ model_multitarget = keras.models.load_model('models/model_resnet_aug2.keras')
 yes_no_model = keras.models.load_model('models/VQA_bin_exp.keras')
 ques_model = keras.models.load_model('models/ques_model.keras')
 
-def make_preds_multitarget(img): #,processed_label
-    # Указываем, что модель должна работать на CPU
+def make_preds_multitarget(img):
     with tf.device('/cpu:0'):
         predictions = model_multitarget.predict(img)
         prediction_ind = np.argmax(predictions)
@@ -44,7 +43,6 @@ def make_preds_binary(image, sequence):
             return 'yes'
         else:
             return 'no'
-        # return pred_label
 
 def make_preds_ques_type(sequence):
     with tf.device('/cpu:0'):
