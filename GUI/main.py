@@ -1,61 +1,62 @@
+import sys
+import os
+import PyQt5; dirname = os.path.dirname(__file__);
+plugin_path = os.path.join(dirname, 'platforms');   os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path;
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
 import pandas as pd
-import tkinter as tk
-from tkinter import ttk, filedialog, Label, Entry, Button, Frame
-from PIL import ImageTk, Image
 import re
+from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog, QLineEdit, QFrame
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
+from PIL import ImageTk, Image
 from preprocess_data import preprocess_multitarget, preprocess_binary, preprocess_generation, decode_outputs, preprocess_ques_type
 from make_preds import make_preds_multitarget, make_preds_binary, make_generation, make_preds_ques_type
 
 
-class VQAApp:
-    def __init__(self, root):
-        self.root = root
+class VQAApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
         self.image_path = None
         self.multitarget_test = pd.read_csv('datasets/multitarget_test.csv')
         self.binary_test = pd.read_csv('datasets/binary_test.csv')
-        self.setup_ui()
+        self.init_ui()
         self.multitarget_ques = ['what is present?',]
 
-    def center_window(self):
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
-        window_width = 500
-        window_height = 500  # Увеличено для размещения всех элементов
-        x_cordinate = int((screen_width / 2) - (window_width / 2))
-        y_cordinate = int((screen_height / 2) - (window_height / 2))
-        self.root.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
+    def init_ui(self):
+        self.setWindowTitle('Image and Question')
+        self.setGeometry(100, 100, 500, 600)
 
-    def setup_ui(self):
-        self.root.update_idletasks()
-        self.root.update()
-        self.root.title('Image and Question')
-        style = ttk.Style()
-        style.theme_use('clam')
+        self.central_widget = QWidget(self)
+        self.setCentralWidget(self.central_widget)
 
-        self.image_frame = Frame(self.root)
-        self.image_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.layout = QVBoxLayout(self.central_widget)
 
-        control_frame = Frame(self.root)
-        control_frame.pack(side=tk.TOP, fill=tk.X) #, pady=10
+        self.image_frame = QFrame(self)
+        self.layout.addWidget(self.image_frame)
 
-        self.question_label = Label(control_frame, text='Enter your question:')
-        self.question_label.pack(side=tk.LEFT, padx=5)
+        self.image_label = QLabel(self)
+        self.image_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.image_label)
 
-        self.question_entry = Entry(control_frame, width=50)
-        self.question_entry.pack(side=tk.LEFT, padx=5)
-        self.question_entry.focus_set()
+        self.question_label = QLabel('Enter your question: ', self)
+        self.layout.addWidget(self.question_label)
 
-        self.submit_button = Button(control_frame, text='Submit', command=self.on_submit)
-        self.submit_button.pack(side=tk.LEFT, padx=5)
+        self.question_entry = QLineEdit(self)
+        self.layout.addWidget(self.question_entry)
 
-        self.result_label = Label(self.root)
-        self.result_label.pack(pady=10)
+        self.submit_button = QPushButton('Submit', self)
+        self.submit_button.clicked.connect(self.on_submit)
+        self.layout.addWidget(self.submit_button)
 
-        self.choose_another_file_button = Button(self.root, text='Choose another file', command=self.change_image)
-        self.choose_another_file_button.pack(pady=5)
+        self.result_label = QLabel("", self)
+        self.result_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.result_label)
 
-        self.center_window()
-        self.image_path = self.open_image_file()
+        self.choose_another_file_button = QPushButton('Choose another file', self)
+        self.choose_another_file_button.clicked.connect(self.change_image)
+        self.layout.addWidget(self.choose_another_file_button)
+
+        self.open_image_file()
 
     def get_info(self):
         multitarget_rows = self.multitarget_test[self.multitarget_test['image_path'] == self.image_path]
@@ -97,12 +98,11 @@ class VQAApp:
         question = self.prepro_question()
 
         if not question:  # Проверка на пустой ввод
-            self.result_label.config(text="Please enter a question.")
+            self.result_label.setText("Please enter a question.")
             return
 
         processed_ques = preprocess_ques_type(question)
         ques_type = make_preds_ques_type(processed_ques)
-        print(ques_type)
 
         if question in multitarget_templates:
             processed_image, processed_label = preprocess_multitarget(self.image_path, question)
@@ -119,44 +119,37 @@ class VQAApp:
             self.result_label.config(text=f"Predicted: {answer}")
 
     def change_image(self):
-        self.result_label.config(text="")
-        self.question_entry.delete(0, tk.END)
-        new_image_path = filedialog.askopenfilename(title="Select Image",
-                                                    filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp")])
+        self.result_label.setText("")
+        self.question_entry.clear()
+        new_image_path = QFileDialog.getOpenFileName(self,
+                                                     "Select Image",
+                                                     "",
+                                                    "Image files (*.jpg *.jpeg *.png *.bmp)")
         if new_image_path:
             self.image_path = new_image_path
             self.update_image_display(new_image_path)
 
     def update_image_display(self, image_path):
-        if hasattr(self, 'image_label') and self.image_label.winfo_exists():
-            self.image_label.destroy()
-
         image = Image.open(image_path)
-        max_size = (self.image_frame.winfo_width(), self.image_frame.winfo_height())
-        image.thumbnail(max_size, Image.LANCZOS)
-        self.photo = ImageTk.PhotoImage(image)
-        self.image_label = Label(self.image_frame, image=self.photo)
-        self.image_label.pack(expand=True)
-
-        self.root.update()
+        image.thumbnail((self.image_label.width(), self.image_label.height()), Image.LANCZOS)
+        image.save('temp_image.png')
+        self.image_label.setPixmap(QPixmap('temp_image.ong'))
 
     def open_image_file(self):
-        image_path = filedialog.askopenfilename(title="Select Image",
-                                                initialdir='D:\images\image_folder',
-                                                filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp")])
+        image_path, _ = QFileDialog.getOpenFileName(self,
+                                                    "Select Image",
+                                                    "D:\images\image_folder",
+                                                    "Image files (*.jpg *.jpeg *.png *.bmp)")
         if not image_path:
             print("No image selected.")
-            self.root.destroy()
+            self.close()
             return
         self.image_path = image_path
         self.update_image_display(image_path)
-        return image_path
-
-    def run(self):
-        self.root.mainloop()
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = VQAApp(root)
-    app.run()
+    app = QApplication(sys.argv)
+    main_window = VQAApp()
+    main_window.show()
+    sys.exit(app.exec_())
