@@ -22,10 +22,10 @@ from transformers import BlipProcessor
 K.set_image_data_format('channels_last')
 multitarget_test = pd.read_csv('datasets/multitarget_test.csv')
 
-with open('D:/diploma/kaggle_data/yes_no/tokenizer.pkl', 'rb') as f:
+with open('D:/diploma/kaggle_data/yes_no/tokenizer_binary.pkl', 'rb') as f:
     tokenizer = pickle.load(f)
 
-with open('D:/diploma/kaggle_data/tokenizer_ques.pkl', 'rb') as f:
+with open('D:/diploma/kaggle_data/tokenizer_questions.pkl', 'rb') as f:
     tokenizer_ques = pickle.load(f)
 processor = BlipProcessor.from_pretrained("Salesforce/blip-vqa-base")
 
