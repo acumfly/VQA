@@ -52,7 +52,6 @@ def preprocess_binary(img_path, question):
 def preprocess_generation(img_path, question):
     image = Image.open(img_path).convert("RGB")
     inputs = processor(image, question, return_tensors="pt")
-    print(inputs)
     return inputs
 
 def preprocess_ques_type(question):

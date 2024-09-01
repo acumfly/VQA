@@ -21,8 +21,8 @@ labels_dict = {'abdomen': 0, 'adrenal': 1, 'blood': 2, 'bone marrow': 3,
 
 ques_type_dict = {'number': 0, 'other': 1, 'yes/no': 2}
 
-gen_mod_dir = 'D:/diploma/kaggle_data/generation'
-generation_model = BlipForQuestionAnswering.from_pretrained(gen_mod_dir, torch_dtype=torch.float16, use_safetensors=True)
+
+generation_model = BlipForQuestionAnswering.from_pretrained('models', torch_dtype=torch.float16, use_safetensors=True)
 # model_multitarget = keras.models.load_model('models/model_resnet (1).keras')
 model_multitarget = keras.models.load_model('models/model_resnet_aug2.keras')
 yes_no_model = keras.models.load_model('models/VQA_bin_exp.keras')
